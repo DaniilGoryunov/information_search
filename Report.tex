@@ -1,0 +1,566 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setotherlanguage{english}
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+\setmonofont{Menlo}
+\newfontfamily\cyrillicfont{Times New Roman}
+\newfontfamily\cyrillicfontsf{Arial}
+\newfontfamily\cyrillicfonttt{Menlo}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{indentfirst}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{xcolor}
+\geometry{left=3cm,right=1.5cm,top=2cm,bottom=2cm}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red!70!black},
+    showstringspaces=false,
+    tabsize=4
+}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    {\fontsize{14pt}{16pt}\selectfont МОСКОВСКИЙ АВИАЦИОННЫЙ ИНСТИТУТ\\(НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЕЛЬСКИЙ УНИВЕРСИТЕТ)}\\[0.5cm]
+    {\fontsize{12pt}{14pt}\selectfont Институт №8 «Компьютерные науки и прикладная математика»}\\[4cm]
+    
+    {\fontsize{16pt}{18pt}\selectfont \textbf{Лабораторные работы}}\\
+    {\fontsize{14pt}{16pt}\selectfont \textbf{по курсу «Информационный поиск»}}\\[5cm]
+    
+    \vfill
+    \begin{flushright}
+        \begin{minipage}{0.51\textwidth}
+            Выполнил: Горюнов Д.В. \\
+            Группа: М8О-408Б-22\\
+            Преподаватель: Кухтичев Антон Алексеевич
+        \end{minipage}
+    \end{flushright}
+    
+    \vfill
+    {\large Москва, 2026}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Лабораторная работа №1. Добыча корпуса документов}
+
+\subsection{Задание}
+Необходимо проанализировать корпус документов, который будет использован при выполнении 
+остальных лабораторных работ: скачать документы, ознакомиться с их характеристиками, 
+выделить текст, найти существующие поисковики для данного набора документов.
+
+\subsection{Метод решения}
+
+\textbf{Тема корпуса:} Автомобильные новости и обзоры на английском языке (Automotive news and reviews).
+
+\textbf{Источники данных:}
+\begin{enumerate}
+    \item \textbf{The Drive} (\url{https://www.thedrive.com}) --- крупнейший автомобильный 
+    медиа-ресурс с тысячами новостей, обзоров и тест-драйвов (32\,870 статей).
+    \item \textbf{TopSpeed} (\url{https://www.topspeed.com}) --- автомобильный портал 
+    с обзорами и сравнениями автомобилей (2\,237 статей).
+    \item \textbf{CarBuzz} (\url{https://carbuzz.com}) --- новостной автомобильный портал (818 статей).
+    \item \textbf{CarScoops} (\url{https://www.carscoops.com}) --- автомобильные новости (31 статья).
+\end{enumerate}
+
+Документы представляют собой HTML-страницы с автомобильными статьями. Каждый документ 
+содержит:
+\begin{itemize}
+    \item Заголовок статьи (тег \texttt{<h1>});
+    \item Основной текст статьи внутри тега \texttt{<article>};
+    \item Мета-информацию: дата публикации, автор, категория;
+    \item Навигационные элементы, рекламу, скрипты (удаляются при извлечении).
+\end{itemize}
+
+Для извлечения текста из HTML используется скрипт на Python с библиотекой BeautifulSoup. 
+Скрипт удаляет теги \texttt{script}, \texttt{style}, \texttt{nav}, \texttt{footer}, 
+\texttt{header}, \texttt{aside}, после чего извлекает чистый текст.
+
+\textbf{Существующие поисковики для данного корпуса:}
+\begin{itemize}
+    \item Встроенный поиск на сайтах thedrive.com и topspeed.com;
+    \item Google с ограничением: \texttt{site:thedrive.com electric vehicle review}.
+\end{itemize}
+
+\subsection{Результаты}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{screenshots/corpus_stats.png}
+    \caption{Статистика корпуса документов}
+    \label{fig:corpus_stats}
+\end{figure}
+
+Корпус содержит 35\,889 документов из четырёх источников. Общий объём сырого HTML --- 
+4\,979~МБ. Общий объём извлечённого текста составляет 140.7~МБ. Средний размер 
+извлечённого документа --- 4\,109 байт.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{screenshots/raw_vs_clean.png}
+    \caption{Сравнение сырого HTML и извлечённого текста}
+    \label{fig:raw_vs_clean}
+\end{figure}
+
+На рис.~\ref{fig:raw_vs_clean} показано сравнение сырого HTML-документа с извлечённым 
+чистым текстом. Извлечение существенно уменьшает объём данных, сохраняя при этом весь 
+информативный контент.
+
+\subsection{Выводы}
+Корпус из 35\,889 реальных автомобильных статей на английском языке успешно собран из 
+четырёх независимых источников. Средний объём извлечённого текста 4\,109 байт, 
+что соответствует нескольким сотням слов --- достаточно для качественной 
+токенизации и индексирования.
+
+\newpage
+
+\section{Лабораторная работа №2. Поисковый робот}
+
+\subsection{Задание}
+Написать поисковый робот на любом языке программирования. Робот должен принимать YAML-конфиг, 
+сохранять документы в базу данных с полями url, html, source, дата обкачки. Робот должен 
+поддерживать остановку и возобновление, а также переобкачку изменённых документов.
+
+\subsection{Метод решения}
+
+Поисковый робот реализован на Python с использованием асинхронного подхода (\textbf{aiohttp})
+для параллельной загрузки. Также реализован вариант на \textbf{Scrapy}.
+В качестве базы данных используется \textbf{SQLite}.
+
+\textbf{Конфигурация} задаётся в файле \texttt{config.yaml}:
+\begin{lstlisting}[language=Python]
+db:
+  path: "../data/corpus.db"
+logic:
+  delay: 0.5
+  user_agent: "IRLabBot/1.0"
+  max_pages: 20000
+  concurrent_requests: 4
+\end{lstlisting}
+
+\textbf{Схема базы данных SQLite:}
+\begin{lstlisting}[language=SQL]
+CREATE TABLE documents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    url TEXT UNIQUE NOT NULL,
+    html TEXT NOT NULL,
+    title TEXT,
+    source TEXT NOT NULL,
+    crawled_at INTEGER NOT NULL,
+    content_hash TEXT NOT NULL
+);
+\end{lstlisting}
+
+\textbf{Архитектура краулера:}
+\begin{itemize}
+    \item Фаза 1: обход sitemap.xml каждого сайта, сбор URL статей;
+    \item Фаза 2: параллельная загрузка (60--80 воркеров) через aiohttp;
+    \item Сохранение документов в SQLite с вычислением MD5-хеша контента;
+    \item \textbf{Возобновление:} при запуске проверяются уже скачанные URL (UNIQUE constraint), 
+    дубликаты пропускаются;
+    \item \textbf{Переобкачка:} если хеш контента изменился, документ обновляется в базе.
+\end{itemize}
+
+\subsection{Результаты}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{screenshots/crawler_run.png}
+    \caption{Лог работы поискового робота}
+    \label{fig:crawler_run}
+\end{figure}
+
+Робот использует асинхронную загрузку с 60--80 параллельными воркерами. 
+Скорость обкачки --- до 20 страниц/с. 
+Общее время обкачки 35\,956 документов из 4 источников --- около 75 минут.
+Размер базы данных --- 5~ГБ (сырой HTML).
+
+\subsection{Выводы}
+Реализованный поисковый робот с асинхронной загрузкой обеспечивает скоростную обкачку 
+автомобильных новостных сайтов. Использование SQLite упрощает развёртывание --- не 
+требуется отдельный сервер БД. Механизм хеширования контента позволяет эффективно 
+определять изменённые документы при повторном обходе.
+
+\newpage
+
+\section{Лабораторная работа №3. Токенизация}
+
+\subsection{Задание}
+Реализовать процесс разбиения текстов документов на токены. Описать правила токенизации, 
+указать достоинства и недостатки выбранного метода.
+
+\subsection{Метод решения}
+
+Токенизатор реализован на C++ (STL разрешена для данной лабораторной). 
+
+\textbf{Правила токенизации:}
+\begin{enumerate}
+    \item Текст разбивается по не-буквенным символам (пробелы, знаки пунктуации, цифры, 
+    спецсимволы);
+    \item Все символы приводятся к нижнему регистру (\texttt{tolower});
+    \item Дефисы и апострофы: апостроф сохраняется внутри слова (\texttt{don't} $\to$ 
+    \texttt{don't}), дефис разделяет токены;
+    \item Токены короче 2 символов отбрасываются;
+    \item Числовые токены игнорируются.
+\end{enumerate}
+
+\textbf{Достоинства метода:}
+\begin{itemize}
+    \item Простота реализации и высокая скорость работы;
+    \item Корректная обработка основных случаев для английского текста;
+    \item Сохранение апострофов позволяет различать формы (\texttt{it's}, \texttt{don't}).
+\end{itemize}
+
+\subsection{Результаты}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{screenshots/tokenization.png}
+    \caption{Пример работы токенизатора}
+    \label{fig:tokenization}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lc}
+\toprule
+\textbf{Метрика} & \textbf{Значение} \\
+\midrule
+Количество токенов (весь корпус) & 23\,568\,294 \\
+Средняя длина токена & 4.79 символов \\
+Среднее количество токенов на документ & 656 \\
+Скорость токенизации & 20\,598.1 КБ/с \\
+\bottomrule
+\end{tabular}
+\caption{Статистика токенизации}
+\label{tab:tokenization_stats}
+\end{table}
+
+Скорость токенизации составляет 20\,598~КБ/с, что является высоким показателем. 
+Обработка всего корпуса (140.7~МБ текста) занимает около 7 секунд.
+
+\subsection{Выводы}
+Реализованный токенизатор корректно обрабатывает английский текст автомобильной тематики. 
+Средняя длина токена 4.79~символов соответствует ожидаемым значениям для английского языка. 
+Скорость токенизации (более 20~МБ/с) достаточна для обработки корпусов масштаба 
+сотен тысяч документов.
+
+\newpage
+
+\section{Лабораторная работа №4. Закон Ципфа}
+
+\subsection{Задание}
+Построить график распределения терминов по частотностям в логарифмической шкале, наложить 
+на него закон Ципфа. Объяснить причины расхождения.
+
+\subsection{Метод решения}
+
+Для построения графика используется следующий подход:
+\begin{enumerate}
+    \item С помощью C++ утилиты \texttt{search\_engine freq} вычисляются частоты всех термов 
+    (после стемминга) в корпусе;
+    \item Python-скрипт \texttt{zipf.py} строит график в лог-лог шкале с помощью matplotlib;
+    \item На график накладывается идеальная кривая Ципфа: $f(r) = C / r$, где $C$ --- 
+    частота самого распространённого терма, $r$ --- ранг.
+\end{enumerate}
+
+\subsection{Результаты}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{screenshots/zipf.png}
+    \caption{Распределение терминов по частотностям и закон Ципфа}
+    \label{fig:zipf}
+\end{figure}
+
+Всего в корпусе выделено 80\,453 уникальных терма (после стемминга). Наиболее частый 
+терм --- <<the>> (1\,433\,009 вхождений). График показывает, что реальное распределение 
+близко к закону Ципфа, но не совпадает с ним точно.
+
+\textbf{Причины расхождения:}
+\begin{itemize}
+    \item \textbf{В области высоких рангов} (редкие слова): частота убывает медленнее, чем 
+    предсказывает закон Ципфа. Это связано с тематической специализацией корпуса --- 
+    автомобильная лексика содержит много технических терминов с умеренной частотой;
+    \item \textbf{В области низких рангов} (частые слова): наиболее частые слова имеют 
+    частоту несколько выше предсказанной, что объясняется узкой тематикой корпуса;
+    \item Стемминг объединяет словоформы, изменяя распределение частот по сравнению с 
+    исходными токенами.
+\end{itemize}
+
+\subsection{Выводы}
+Распределение терминов по частотностям в нашем корпусе в целом следует закону Ципфа, 
+что подтверждает его применимость для тематических корпусов. Отклонения объясняются 
+спецификой автомобильной тематики и эффектом стемминга.
+
+\newpage
+
+\section{Лабораторная работа №5. Стемминг}
+
+\subsection{Задание}
+Добавить в поисковую систему стемминг.
+
+\subsection{Метод решения}
+
+Реализован алгоритм Портера (Porter Stemmer) для английского языка на C++ без использования 
+STL. Алгоритм состоит из 5 шагов последовательного удаления и замены суффиксов.
+
+\textbf{Шаги алгоритма:}
+\begin{enumerate}
+    \item \textbf{Шаг 1a}: обработка множественного числа (\texttt{-sses} $\to$ \texttt{-ss}, 
+    \texttt{-ies} $\to$ \texttt{-i}, \texttt{-s} $\to$ удаление);
+    \item \textbf{Шаг 1b}: обработка прошедшего времени и герундия (\texttt{-eed}, \texttt{-ed}, 
+    \texttt{-ing});
+    \item \textbf{Шаг 1c}: замена конечного \texttt{y} на \texttt{i};
+    \item \textbf{Шаг 2}: замена суффиксов (\texttt{-ational} $\to$ \texttt{-ate}, 
+    \texttt{-izer} $\to$ \texttt{-ize} и др.) при условии $m > 0$;
+    \item \textbf{Шаг 3}: удаление суффиксов (\texttt{-icate} $\to$ \texttt{-ic}, 
+    \texttt{-ful} $\to$ удаление и др.);
+    \item \textbf{Шаг 4}: удаление суффиксов при $m > 1$ (\texttt{-al}, \texttt{-ance}, 
+    \texttt{-ence}, \texttt{-ion} и др.);
+    \item \textbf{Шаг 5}: финальная обработка (удаление конечного \texttt{e}, дублированного 
+    \texttt{l}).
+\end{enumerate}
+
+Стеммер работает с собственной реализацией строки (\texttt{MyString}) без использования STL.
+
+\subsection{Результаты}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{screenshots/stemming.png}
+    \caption{Примеры работы Porter Stemmer}
+    \label{fig:stemming}
+\end{figure}
+
+Примеры на рис.~\ref{fig:stemming} демонстрируют корректную работу стеммера на 
+автомобильной лексике: \texttt{running}~$\to$~\texttt{run}, 
+\texttt{acceleration}~$\to$~\texttt{acceler}, \texttt{turbocharged}~$\to$~\texttt{turbocharg}.
+
+Стемминг уменьшает количество уникальных терминов, что повышает полноту поиска (recall). 
+Например, запрос \texttt{drive} теперь находит документы, содержащие \texttt{driving}, 
+\texttt{driven}, \texttt{driver}.
+
+\subsection{Выводы}
+Алгоритм Портера корректно обрабатывает основные морфологические формы английских слов. 
+Интеграция стеммера в поисковую систему повышает полноту поиска за счёт приведения различных 
+словоформ к единой основе.
+
+\newpage
+
+\section{Лабораторная работа №6. Булев индекс}
+
+\subsection{Задание}
+Построить поисковый индекс, пригодный для булева поиска: самостоятельно разработанный 
+бинарный формат, обратный и прямой индексы.
+
+\subsection{Метод решения}
+
+\subsubsection{Бинарный формат инвертированного индекса}
+
+Файл \texttt{index.bin} имеет следующую структуру:
+
+\begin{lstlisting}
+[Magic 4B: "BIDX"] [Version 2B] [NumTerms 4B] [NumDocs 4B]
+For each term:
+  [term_len 2B] [term_chars ...] [doc_freq 4B]
+  [posting list: doc_freq * 4B doc_id values]
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{screenshots/index_format.png}
+    \caption{Структура бинарного формата индекса}
+    \label{fig:index_format}
+\end{figure}
+
+\subsubsection{Прямой индекс}
+
+Файл \texttt{forward.bin}:
+\begin{lstlisting}
+[Magic 4B: "FIDX"] [NumDocs 4B]
+For each document:
+  [url_len 2B] [url_chars ...] [title_len 2B] [title_chars ...]
+\end{lstlisting}
+
+\subsubsection{Ключевые структуры данных}
+
+Все структуры данных реализованы вручную на C++ без использования STL:
+\begin{itemize}
+    \item \textbf{MyString} --- строка (\texttt{char*}, \texttt{len}, \texttt{cap}) с 
+    операциями push, append, tolower, compare;
+    \item \textbf{DynArray / UInt32Array} --- динамический массив с автоматическим 
+    расширением (удвоение ёмкости);
+    \item \textbf{HashMap} --- хеш-таблица с функцией \textbf{FNV-1a} и открытой адресацией 
+    (линейное пробирование), автоматическое расширение при заполнении 70\%.
+\end{itemize}
+
+\textbf{Хеш-функция FNV-1a:}
+\begin{lstlisting}[language=C++]
+uint32_t fnv1a_hash(const char* data, size_t len) {
+    uint32_t hash = 2166136261u;
+    for (size_t i = 0; i < len; i++) {
+        hash ^= (uint8_t)data[i];
+        hash *= 16777619u;
+    }
+    return hash;
+}
+\end{lstlisting}
+
+\textbf{Метод сортировки:} QuickSort (быстрая сортировка) для упорядочивания posting lists. 
+Средняя сложность $O(n \log n)$, хорошо работает на случайных данных.
+
+\subsection{Результаты}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{screenshots/index_build.png}
+    \caption{Процесс построения индекса}
+    \label{fig:index_build}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lc}
+\toprule
+\textbf{Метрика} & \textbf{Значение} \\
+\midrule
+Количество документов & 35\,889 \\
+Количество уникальных термов & 80\,453 \\
+Размер инвертированного индекса & 42 МБ \\
+Размер прямого индекса & 911 КБ \\
+Время построения & 6.99 с \\
+Скорость индексации & 5\,132.7 док/с \\
+Скорость индексации & 20\,598.1 КБ/с \\
+\bottomrule
+\end{tabular}
+\caption{Статистика индексации}
+\label{tab:index_stats}
+\end{table}
+
+Средняя длина терма после стемминга составляет примерно 4.5 символа, что меньше средней 
+длины токена (4.79). Это объясняется тем, что стемминг удаляет суффиксы, сокращая 
+длину слов.
+
+\subsection{Выводы}
+Бинарный формат индекса обеспечивает компактное хранение и быстрое чтение. Хеш-таблица 
+с FNV-1a и открытой адресацией обеспечивает $O(1)$ доступ к posting list для каждого терма. 
+Скорость индексации позволяет обрабатывать корпус за несколько секунд. При увеличении 
+объёма данных в 10 раз основным ограничением станет объём оперативной памяти для хеш-таблицы; 
+в этом случае потребуется переход к блочной индексации (BSBI или SPIMI).
+
+\newpage
+
+\section{Лабораторная работа №7. Булев поиск}
+
+\subsection{Задание}
+Реализовать ввод поисковых запросов и их выполнение над индексом. Синтаксис запросов: 
+пробел или \texttt{\&\&} для И, \texttt{||} для ИЛИ, \texttt{!} для НЕТ, поддержка скобок. 
+Реализовать веб-сервис с формой ввода и страницей выдачи.
+
+\subsection{Метод решения}
+
+\subsubsection{Парсер запросов}
+
+Парсер реализован методом рекурсивного спуска на C++ без STL. Грамматика:
+
+\begin{lstlisting}
+expr     -> or_expr
+or_expr  -> and_expr ("||" and_expr)*
+and_expr -> not_expr (("&&" | implicit_and) not_expr)*
+not_expr -> "!" not_expr | atom
+atom     -> "(" expr ")" | WORD
+\end{lstlisting}
+
+Парсер устойчив к переменному числу пробелов. Пробел между словами трактуется как 
+операция И (implicit AND).
+
+\subsubsection{Выполнение запросов}
+
+Каждый терм ищется в хеш-таблице инвертированного индекса. Posting lists (отсортированные 
+массивы doc\_id) объединяются операциями:
+\begin{itemize}
+    \item \textbf{AND (пересечение)}: два указателя проходят по двум массивам, $O(n + m)$;
+    \item \textbf{OR (объединение)}: слияние двух отсортированных массивов, $O(n + m)$;
+    \item \textbf{NOT}: дополнение множества до полного набора документов, $O(N)$ где $N$ --- 
+    число документов.
+\end{itemize}
+
+\subsubsection{Веб-интерфейс}
+
+Веб-сервис реализован на Python с использованием встроенного \texttt{http.server}:
+\begin{itemize}
+    \item \textbf{GET /} --- начальная страница с формой ввода запроса;
+    \item \textbf{GET /search?q=...} --- страница результатов с 50 результатами на странице, 
+    содержащая заголовки документов и ссылки;
+    \item Веб-сервер вызывает C++ CLI через \texttt{subprocess}.
+\end{itemize}
+
+\subsection{Результаты}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{screenshots/search_results.png}
+    \caption{Результаты булева поиска}
+    \label{fig:search_results}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Запрос} & \textbf{Результатов} & \textbf{Время, мс} \\
+\midrule
+\texttt{toyota camry} & 401 & 0.08 \\
+\texttt{electric vehicle} & 5\,978 & 0.47 \\
+\texttt{tesla || rivian} & 4\,071 & 0.11 \\
+\texttt{bmw !audi} & 3\,209 & 0.47 \\
+\texttt{(ford || chevrolet) truck} & 3\,573 & 0.46 \\
+\texttt{hybrid suv review} & 1\,058 & 0.52 \\
+\bottomrule
+\end{tabular}
+\caption{Скорость выполнения поисковых запросов}
+\label{tab:search_speed}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{screenshots/web_interface.png}
+    \caption{Веб-интерфейс поисковой системы}
+    \label{fig:web_interface}
+\end{figure}
+
+Наиболее длительный запрос --- \texttt{hybrid suv review} (0.52~мс), так как он 
+включает пересечение трёх posting lists. Простые запросы выполняются за 0.08--0.11~мс.
+Операция NOT (\texttt{bmw !audi}) требует перебора всех 35\,889 документов --- 0.47~мс.
+
+\textbf{Тестирование корректности} проводилось путём сравнения результатов булева поиска 
+с ручной проверкой: для каждого тестового запроса проверялось, что возвращённые документы 
+действительно содержат (или не содержат) указанные термины.
+
+\subsection{Выводы}
+Реализованная система булева поиска обеспечивает выполнение запросов за доли миллисекунды 
+благодаря использованию отсортированных posting lists и эффективных операций пересечения 
+и объединения. Веб-интерфейс обеспечивает удобное взаимодействие с поисковой системой через 
+браузер. CLI-утилита позволяет выполнять пакетные запросы из файла.
+
+\end{document}
